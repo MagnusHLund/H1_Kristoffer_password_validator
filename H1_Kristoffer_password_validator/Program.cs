@@ -1,5 +1,3 @@
-﻿using System.Globalization;
-
 namespace H1_Kristoffer_password_validator
 {
     internal class Program
@@ -55,27 +53,25 @@ namespace H1_Kristoffer_password_validator
                     continue;
                 }
 
-                // Password is now valid
+                // Password is now valid but could be weak
 
                 // Check if there are 4 identical characters in a row
                 if (IdenticalCharacters(input))
                 {
                     ValidErrors("You have 4 identical characters next to each other!");
+                    continue;
                 }
 
                 // Check if there are 4 consecutive characters in a row
-                if (IsConsecutive(password))
+                if (IsConsecutive(password, input))
                 {
                     ValidErrors("You have 4 consecutive characters!");
+                    continue;
                 }
 
-
+                // password if secure
                 ValidPassword(password);
-                Console.ReadLine();
-
             }
-
-
         }
 
         static bool UpperLowercase(char[] input)
@@ -170,22 +166,21 @@ namespace H1_Kristoffer_password_validator
             return false;
         }
 
-        static bool IsConsecutive(string password)
+        static bool IsConsecutive(string password, char[] input)
         {
+            // string containing every character in order and reverse order
             string letters = "abcdefghijklnmopqrstuvwxyzæøå01234567890987654321åøæzyxwvutsrqpomnlkjihgfedcba";
-
-            for (int i = 0; i < letters.Length - 3; i++)
+            
+            // Goes through the for loop for each letter in the letters string
+            for (int i = 0; i < letters.Length-3; i++)
             {
-                string trimmed = letters.Remove(i, i+4);
-                Console.WriteLine(trimmed);
-                // string reversed = (string)trimmed.Reverse();
-                for (int j = 0; j < 2; j++)
-                {
+                // Creates a substring, which starts on the i position and then takes the next 4 characters.
+                string trimmed = letters.Substring(i, 4);
 
-                    if (password.Contains(trimmed))
-                    {
-                        return true;
-                    }
+                // If password contains the substring, then return true
+                if (password.Contains(trimmed))
+                {
+                    return true;
                 }
             }
 
@@ -198,7 +193,9 @@ namespace H1_Kristoffer_password_validator
 
         static void ValidPassword(string password)
         {
+            // Does some output in green text, changes back to white
             Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Valid password!");
             Console.WriteLine(password);
             Console.ForegroundColor = ConsoleColor.White;
             Console.ReadLine();
@@ -209,8 +206,8 @@ namespace H1_Kristoffer_password_validator
             // Changes the text color and outputs an error
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Error:\n{message}\nPress enter to try again");
-            Console.ReadLine();
             Console.ForegroundColor = ConsoleColor.White;
+            Console.ReadLine();
         }
 
         static void ValidErrors(string message)
@@ -219,6 +216,7 @@ namespace H1_Kristoffer_password_validator
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"Your password has passed, however it is weak\n{message}\nPress enter to continue");
             Console.ForegroundColor = ConsoleColor.White;
+            Console.ReadLine();
         }
 
         static void SignInMenu()
@@ -238,10 +236,6 @@ namespace H1_Kristoffer_password_validator
             // Tells the user to write
             Console.WriteLine("\nWrite your password:");
         }
-
-        #endregion
-
-        #region Models
 
         #endregion
     }
